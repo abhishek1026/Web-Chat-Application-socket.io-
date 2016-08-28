@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+
+      #chatWrap{
+        float: left;
+        border: 1px #000 solid;
+        width: 80%;
+      }
+      #contentWrap{
+        display: none;
+      }
+      #nickAsk{
+        width: 80%;
+        background: green;
+        margin-top: .1cm;
+        margin-left: 10%;
+        margin-right: 10%;
+      }
+      #setNick{
+        margin-left: 10%;
+        margin-right: 10%;
+        bottom: .3em;
+      }
+      #nickError{
+        margin-left:10%;
+        width: 30%;
+        background:red;
+      }
+
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 15px Helvetica, Arial; }
+      form { background: orange; padding: 3px; position: fixed; bottom: 0; width: 90%; margin right:10%; }
+      form input { border: 0; padding: 10px; width: 99%;}
+      form button { width: 9%; background: orange; border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0;}
+      #messages li { border: 1px #000 solid;padding: 5px 10px; background: blue; }
+      #messages li:nth-child(odd) { background: orange; }
+    </style>
+  </head>
+  <body>
+
+    <div id="nickWrap">
+      <p id="nickAsk">Enter a <strong>username</strong> in the text box below</p>
+      <p id="nickError"></p>
+      <form id="setNick">
+        <input size="30" id="nickname"></input>
+        <input type="submit"></input>
+        <!--<button>Add me!</button>-->
+      </form>
+    </div>
+
+
+    <div id="contentWrap">
+      <h4>Users Online:</h4>
+            <div id="users"></div>
+        <div id ="chatWrap">
+          <ul id="messages"></ul>
+    <form action="" id ="sendmessage">
+      <input id="m" autocomplete="off"></input><button>Send</button>
+    </form>
+    </div>
+    </div>
+
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+      var socket = io();
+      var $nickForm = $('#setNick');
+      var $nickError = $('#nickError');
+      var $nickBox = $('#nickname');
+      var $messageForm = $('#sendmessage');
+      var $messageBox = $('#m');
+      var $users = $('#users');
+      var $list = $ ('#messages');
+
+
+      $nickForm.submit(function(e){
+        var $temp = $nickBox.val();
+        e.preventDefault();
+        socket.emit('new user', $temp, function(data){
+          if(data){
+            socket.emit('userentry', $temp);
+            $('#nickWrap').hide();
+            $('#contentWrap').show();
+          }
+          else{
+            socket.emit('invalid', $temp);
+            $nickError.html('Error: EITHER BLANK OR TAKEN');
+          }
+          }
+        );
+        $nickBox.val('');
+      });
+
+      socket.on('usernames', function(data){
+        var html = '';
+        for(i=0; i<data.length; i++){
+          html+=data[i] + '<br/>'
+        }
+        $users.html(html);
+      })
+
+      $messageForm.submit(function(e){
+        $temp2 = $messageBox.val();
+        e.preventDefault();
+        socket.emit('message attempt', $temp2);
+        if($temp2 != ''){
+        socket.emit('chat message', $temp2);
+        $messageBox.val('');
+        }
+        else
+          socket.emit('message fail', $temp2);
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $list.append($('<li>').text(msg.nick + ": " + msg.msg));
+      });
+    </script>
+  </body>
+</html>
