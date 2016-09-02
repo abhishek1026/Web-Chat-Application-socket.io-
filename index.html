@@ -1,74 +1,170 @@
 <!doctype html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-    <style>
 
-      #chatWrap{
-        float: left;
-        border: 1px #000 solid;
-        width: 80%;
-      }
-      #contentWrap{
-        display: none;
-      }
-      #nickAsk{
-        width: 80%;
-        background: green;
-        margin-top: .1cm;
-        margin-left: 10%;
-        margin-right: 10%;
-      }
-      #setNick{
-        margin-left: 10%;
-        margin-right: 10%;
-        bottom: .3em;
-      }
-      #nickError{
-        margin-left:10%;
-        width: 30%;
-        background:red;
-      }
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    #chatWrap {
+      float: left;
+      border: 1px #000 solid;
+      width: 80%;
+    }
+    
+    #contentWrap {
+      display: none;
+    }
+    
+    #nickAsk {
+      width: 80%;
+      background: green;
+      margin-top: .1cm;
+      margin-left: 10%;
+      margin-right: 10%;
+    }
+    
+    #setNick {
+      margin-left: 10%;
+      margin-right: 10%;
+      bottom: .3em;
+    }
+    
+    #nickError {
+      margin-left: 10%;
+      width: 30%;
+      background: red;
+    }
+    
+    h1 {
+      font-weight: bold;
+      text-align: center;
+      background: yellow;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font: 15px Helvetica, Arial;
+    }
+    
+    form {
+      background: orange;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 90%;
+      margin right: 10%;
+    }
+    
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 99%;
+    }
+    
+    form button {
+      width: 9%;
+      background: orange;
+      border: none;
+      padding: 10px;
+    }
+    
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #messages li {
+      border: 1px #000 solid;
+      padding: 5px 10px;
+      background: white;
+    }
+    
+    li.blue {
+      color: blue;
+    }
+    
+    li.red {
+      font-weight: bold;
+      color: red;
+    }
+    
+    li.brown {
+      color: brown;
+    }
+    
+    li.pink {
+      color: pink;
+    }
+    
+    li.purple {
+      color: purple;
+    }
+    
+    li.maroon {
+      color: maroon;
+    }
+    
+    li.navy {
+      color: navy;
+    }
+    
+    li.silver {
+      color: silver;
+    }
+    
+    li.teal {
+      color: teal;
+    }
+    
+    li.green {
+      color: green;
+    }
+    
+    li.olive {
+      color: olive;
+    }
+    
+    #messages li:nth-child(odd) {
+      background: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="nickWrap">
+    <p id="nickAsk">Enter a <strong>username</strong> in the text box below</p>
+    <p id="nickError"></p>
+    <form id="setNick">
+      <input size="30" id="nickname"></input>
+      <input type="submit"></input>
+      <!--<button>Add me!</button>-->
+    </form>
+  </div>
 
 
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 15px Helvetica, Arial; }
-      form { background: orange; padding: 3px; position: fixed; bottom: 0; width: 90%; margin right:10%; }
-      form input { border: 0; padding: 10px; width: 99%;}
-      form button { width: 9%; background: orange; border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0;}
-      #messages li { border: 1px #000 solid;padding: 5px 10px; background: blue; }
-      #messages li:nth-child(odd) { background: orange; }
-    </style>
-  </head>
-  <body>
-
-    <div id="nickWrap">
-      <p id="nickAsk">Enter a <strong>username</strong> in the text box below</p>
-      <p id="nickError"></p>
-      <form id="setNick">
-        <input size="30" id="nickname"></input>
-        <input type="submit"></input>
-        <!--<button>Add me!</button>-->
+  <div id="contentWrap">
+    <h1>Socket.IO Chat Room</h1>
+    <h4>Users Online:</h4>
+    <div id="users"></div>
+    <a href="javascript:ReverseDisplay('sendmessage')">Click to show/hide message box!</a>
+    <div id="chatWrap">
+      <ul id="messages"></ul>
+      <form action="" id="sendmessage" style="display: block;">
+        <input id="m" autocomplete="off"></input><button>Send</button>
       </form>
     </div>
+  </div>
 
 
-    <div id="contentWrap">
-      <h4>Users Online:</h4>
-            <div id="users"></div>
-        <div id ="chatWrap">
-          <ul id="messages"></ul>
-    <form action="" id ="sendmessage">
-      <input id="m" autocomplete="off"></input><button>Send</button>
-    </form>
-    </div>
-    </div>
-
-
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
 
       var socket = io();
       var $nickForm = $('#setNick');
@@ -78,20 +174,34 @@
       var $messageBox = $('#m');
       var $users = $('#users');
       var $list = $ ('#messages');
+      var textcolor;
+      var boolcheck = false;
+      var boolcheck1 = false;
+
+    
+      function ReverseDisplay(d) {
+      if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
+      else { document.getElementById(d).style.display = "none"; }
+      }
 
 
       $nickForm.submit(function(e){
         var $temp = $nickBox.val();
         e.preventDefault();
         socket.emit('new user', $temp, function(data){
-          if(data){
+          if(data === true){
             socket.emit('userentry', $temp);
             $('#nickWrap').hide();
             $('#contentWrap').show();
-          }
-          else{
+        }
+          else if(data=="taken")
+          {
             socket.emit('invalid', $temp);
             $nickError.html('Error: EITHER BLANK OR TAKEN');
+          }
+          else if(data=="full"){
+            socket.emit('full', $temp);
+            $nickError.html('Error: SORRY! LOBBY IS FULL!');
           }
           }
         );
@@ -101,8 +211,10 @@
       socket.on('usernames', function(data){
         var html = '';
         for(i=0; i<data.length; i++){
-          html+=data[i] + '<br/>'
+          html+=data[i] + '<br/>'       
         }
+         html += 'Number of users: ' + data.length + '<br/>'
+
         $users.html(html);
       })
 
@@ -112,15 +224,41 @@
         socket.emit('message attempt', $temp2);
         if($temp2 != ''){
         socket.emit('chat message', $temp2);
-        $messageBox.val('');
         }
-        else
-          socket.emit('message fail', $temp2);
+        else{
+        socket.emit('message fail', $temp2);
+        }
+        $messageBox.val('');
         return false;
       });
+      socket.on('yousuck', function(name){
+        $list.append($('<li class="red">').text(name +' tried to input empty message!'));
+      })
       socket.on('chat message', function(msg){
-        $list.append($('<li>').text(msg.nick + ": " + msg.msg));
+        socket.emit('checkself',msg,function(data){
+
+          if(data){
+            boolcheck = true;
+          }
+          boolcheck1 = boolcheck;
+
+
+        });
+        socket.emit('getUserColor', msg.nick,function (color){
+            textcolor = color; 
+            $list.append($('<li class="'+textcolor+'">').text((boolcheck?'me':msg.nick)+': ' + msg.msg));
+            boolcheck = false;
+          });
+        socket.emit('grabtime',msg.nick,function(time){
+              
+            $list.append($('<li class="default">').text((boolcheck1?'you':msg.nick) + ' sent this on ' +time));
+            boolcheck1 = false;
+          });
       });
+      socket.on('loser', function(name){
+        $list.append($('<li class="red">').text(name + ' left the chat room!'));
+      })
     </script>
-  </body>
+</body>
+
 </html>
