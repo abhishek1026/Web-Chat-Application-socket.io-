@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+<<<<<<< HEAD
 
 <head>
   <title>Socket.IO chat</title>
@@ -137,6 +138,147 @@
 
 <body>
 
+=======
+
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    #chatWrap {
+      float: left;
+      border: 1px #000 solid;
+      width: 80%;
+    }
+    
+    #contentWrap {
+      display: none;
+    }
+    
+    #nickAsk {
+      width: 80%;
+      background: green;
+      margin-top: .1cm;
+      margin-left: 10%;
+      margin-right: 10%;
+    }
+    
+    #setNick {
+      margin-left: 10%;
+      margin-right: 10%;
+      bottom: .3em;
+    }
+    
+    #nickError {
+      margin-left: 10%;
+      width: 30%;
+      background: red;
+    }
+    
+    h1 {
+      font-weight: bold;
+      text-align: center;
+      background: yellow;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font: 15px Helvetica, Arial;
+    }
+    
+    form {
+      background: orange;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 90%;
+      margin right: 10%;
+    }
+    
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 99%;
+    }
+    
+    form button {
+      width: 9%;
+      background: orange;
+      border: none;
+      padding: 10px;
+    }
+    
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    #messages li{
+      border: 1px #000 solid;
+      padding: 5px 10px;
+      background: white;
+
+    }
+
+    li.blue{
+      color: blue;
+    }
+
+    li.red{
+      font-weight: bold;
+      color: red;
+    }
+
+    li.brown{
+      color: brown;
+    }
+
+    li.pink{
+      color: pink;
+    }
+
+    li.purple{
+      color: purple;
+    }
+
+    li.maroon{
+      color: maroon;
+    }
+
+    li.navy{
+      color: navy;
+    }
+
+    li.silver{
+      color: silver;
+    }
+
+    li.teal{
+      color: teal;
+    }
+    
+    li.green{
+      color: green;
+    }
+
+    li.olive{
+      color: olive;
+    }
+
+    #messages li:nth-child(odd) {
+      background: white;
+    }
+    
+  </style>
+</head>
+
+<body>
+
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
   <div id="nickWrap">
     <p id="nickAsk">Enter a <strong>username</strong> in the text box below</p>
     <p id="nickError"></p>
@@ -152,7 +294,11 @@
     <h1>Socket.IO Chat Room</h1>
     <h4>Users Online:</h4>
     <div id="users"></div>
+<<<<<<< HEAD
     <a href="javascript:ReverseDisplay('sendmessage')">Click to show/hide message box!</a>
+=======
+    <a href="javascript:ReverseDisplay('sendmessage')">Click to show/hide message form!</a>
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
     <div id="chatWrap">
       <ul id="messages"></ul>
       <form action="" id="sendmessage" style="display: block;">
@@ -175,10 +321,21 @@
       var $users = $('#users');
       var $list = $ ('#messages');
       var textcolor;
+<<<<<<< HEAD
       var boolcheck = false;
       var boolcheck1 = false;
 
     
+=======
+
+      
+      function HideContent(d) {
+      document.getElementById(d).style.display = "none";
+      }
+      function ShowContent(d) {
+      document.getElementById(d).style.display = "block";
+      }
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
       function ReverseDisplay(d) {
       if(document.getElementById(d).style.display == "none") { document.getElementById(d).style.display = "block"; }
       else { document.getElementById(d).style.display = "none"; }
@@ -193,14 +350,21 @@
             socket.emit('userentry', $temp);
             $('#nickWrap').hide();
             $('#contentWrap').show();
+<<<<<<< HEAD
         }
+=======
+          }
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
           else if(data=="taken")
           {
             socket.emit('invalid', $temp);
             $nickError.html('Error: EITHER BLANK OR TAKEN');
           }
           else if(data=="full"){
+<<<<<<< HEAD
             socket.emit('full', $temp);
+=======
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
             $nickError.html('Error: SORRY! LOBBY IS FULL!');
           }
           }
@@ -213,8 +377,12 @@
         for(i=0; i<data.length; i++){
           html+=data[i] + '<br/>'       
         }
+<<<<<<< HEAD
          html += 'Number of users: ' + data.length + '<br/>'
 
+=======
+        html += 'Number of users: ' + data.length + '<br/>';
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
         $users.html(html);
       })
 
@@ -235,6 +403,7 @@
         $list.append($('<li class="red">').text(name +' tried to input empty message!'));
       })
       socket.on('chat message', function(msg){
+<<<<<<< HEAD
         socket.emit('checkself',msg,function(data){
 
           if(data){
@@ -253,6 +422,11 @@
               
             $list.append($('<li class="default">').text((boolcheck1?'you':msg.nick) + ' sent this on ' +time));
             boolcheck1 = false;
+=======
+        socket.emit('getUserColor', msg.nick,function (color){
+            textcolor = color; 
+            $list.append($('<li class="'+textcolor+'">').text(msg.nick + ": " + msg.msg));
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
           });
       });
       socket.on('loser', function(name){

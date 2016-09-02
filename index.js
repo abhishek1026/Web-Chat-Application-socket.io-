@@ -14,10 +14,17 @@ io.on('connection', function (socket) {
     console.log('username registration attempt');
     if (nicknames.indexOf(data) != -1 || data == '') {
       callback("taken");
+<<<<<<< HEAD
     }
     else if (nicknames.length >= 10) {
       callback("full");
     }
+=======
+    }
+    else if(nicknames.length >= 10){
+      callback("full");
+    }
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
     else {
       socket.nickname = data;
       nicknames.push(socket.nickname);
@@ -41,7 +48,10 @@ io.on('connection', function (socket) {
       return;
     }
     console.log(socket.nickname + ' disconnected');
+<<<<<<< HEAD
     io.emit('loser', socket.nickname);
+=======
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
     nicknames.splice(nicknames.indexOf(socket.nickname), 1);
     updateNicknames();
   });
@@ -97,6 +107,7 @@ io.on('connection', function (socket) {
     if (nicknames.indexOf(nick) == 8) {
       callback("teal");
     }
+<<<<<<< HEAD
     if (nicknames.indexOf(nick) == 9) {
       callback("olive");
     }
@@ -143,6 +154,12 @@ io.on('connection', function (socket) {
     else {
       callback(false);
     }
+=======
+    if (nicknames.indexOf(nick) == 9){
+      callback("olive");
+    }
+
+>>>>>>> f17c20ca431ec078fa223f1e7b6280fc8360aaf9
   });
 
 });
